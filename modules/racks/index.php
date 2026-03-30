@@ -1,13 +1,17 @@
 <?php
-$pageTitle = 'Racks';
-$activePage = 'racks';
-require_once __DIR__ . '/../../includes/header.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
 $db = Database::getInstance();
 
 handleDelete('racks', [
     ['sql' => 'DELETE FROM rack_conexoes WHERE rack_id = ?', 'params' => [':id']],
     ['sql' => 'DELETE FROM dios WHERE rack_id = ?',          'params' => [':id']],
 ]);
+
+$pageTitle = 'Racks';
+$activePage = 'racks';
+require_once __DIR__ . '/../../includes/header.php';
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT r.*,

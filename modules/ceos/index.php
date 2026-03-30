@@ -1,10 +1,14 @@
 <?php
-$pageTitle = 'CEOs — Caixas de Emenda';
-$activePage = 'ceos';
-require_once __DIR__ . '/../../includes/header.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
 $db = Database::getInstance();
 
 handleDelete('ceos');
+
+$pageTitle = 'CEOs — Caixas de Emenda';
+$activePage = 'ceos';
+require_once __DIR__ . '/../../includes/header.php';
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT c.*, p.codigo as poste_codigo FROM ceos c LEFT JOIN postes p ON p.id = c.poste_id WHERE 1=1";

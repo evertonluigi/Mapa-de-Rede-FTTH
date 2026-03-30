@@ -1,10 +1,14 @@
 <?php
-$pageTitle = 'Splitters';
-$activePage = 'splitters';
-require_once __DIR__ . '/../../includes/header.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
 $db = Database::getInstance();
 
 handleDelete('splitters');
+
+$pageTitle = 'Splitters';
+$activePage = 'splitters';
+require_once __DIR__ . '/../../includes/header.php';
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT s.*, p.codigo as poste_codigo FROM splitters s LEFT JOIN postes p ON p.id = s.poste_id WHERE 1=1";

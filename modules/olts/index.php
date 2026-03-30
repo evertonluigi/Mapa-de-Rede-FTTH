@@ -1,10 +1,18 @@
 <?php
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
+$db = Database::getInstance();
+
+handleDelete('olts', [
+    // Desvincula clientes e CTOs dos olt_pons desta OLT antes do CASCADE apagá-los
+    ['sql' => 'UPDATE clientes SET olt_pon_id = NULL WHERE olt_pon_id IN (SELECT id FROM olt_pons WHERE olt_id = ?)', 'params' => [':id']],
+    ['sql' => 'UPDATE ctos SET olt_pon_id = NULL WHERE olt_pon_id IN (SELECT id FROM olt_pons WHERE olt_id = ?)',     'params' => [':id']],
+]);
+
 $pageTitle = 'OLTs';
 $activePage = 'olts';
 require_once __DIR__ . '/../../includes/header.php';
-$db = Database::getInstance();
-
-handleDelete('olts');
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT o.*,

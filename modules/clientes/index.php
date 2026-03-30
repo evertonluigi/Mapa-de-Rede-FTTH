@@ -1,10 +1,14 @@
 <?php
-$pageTitle = 'Clientes';
-$activePage = 'clientes';
-require_once __DIR__ . '/../../includes/header.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
 $db = Database::getInstance();
 
 handleDelete('clientes');
+
+$pageTitle = 'Clientes';
+$activePage = 'clientes';
+require_once __DIR__ . '/../../includes/header.php';
 
 $search = $_GET['q'] ?? '';
 $status_filter = $_GET['status'] ?? '';

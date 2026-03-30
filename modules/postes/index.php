@@ -1,10 +1,19 @@
 <?php
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
+$db = Database::getInstance();
+
+handleDelete('postes', [
+    // Desvincula CEOs e CTOs do poste (não os apaga, apenas remove o vínculo)
+    ['sql' => 'UPDATE ceos SET poste_id = NULL WHERE poste_id = ?',     'params' => [':id']],
+    ['sql' => 'UPDATE ctos SET poste_id = NULL WHERE poste_id = ?',     'params' => [':id']],
+    ['sql' => 'UPDATE splitters SET poste_id = NULL WHERE poste_id = ?','params' => [':id']],
+]);
+
 $pageTitle = 'Postes';
 $activePage = 'postes';
 require_once __DIR__ . '/../../includes/header.php';
-$db = Database::getInstance();
-
-handleDelete('postes');
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT p.*, u.nome as criado_por FROM postes p LEFT JOIN usuarios u ON u.id = p.created_by";

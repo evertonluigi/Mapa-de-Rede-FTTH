@@ -1,10 +1,19 @@
 <?php
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
+$db = Database::getInstance();
+
+handleDelete('ctos', [
+    // Desvincula clientes da CTO (não apaga o cliente, apenas remove o vínculo)
+    ['sql' => 'UPDATE clientes SET cto_id = NULL, porta_cto = NULL WHERE cto_id = ?', 'params' => [':id']],
+    // Remove splitters associados
+    ['sql' => 'DELETE FROM elemento_splitters WHERE elem_tipo = ? AND elem_id = ?', 'params' => ['cto', ':id']],
+]);
+
 $pageTitle = 'CTOs — Caixas Terminais';
 $activePage = 'ctos';
 require_once __DIR__ . '/../../includes/header.php';
-$db = Database::getInstance();
-
-handleDelete('ctos');
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT c.*, p.codigo as poste_codigo,

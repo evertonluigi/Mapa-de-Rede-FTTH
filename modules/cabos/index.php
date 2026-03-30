@@ -1,12 +1,19 @@
 <?php
-$pageTitle = 'Cabos';
-$activePage = 'cabos';
-require_once __DIR__ . '/../../includes/header.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../includes/helpers.php';
+Auth::check();
 $db = Database::getInstance();
 
 handleDelete('cabos', [
-    ['sql' => 'DELETE FROM cabo_pontos WHERE cabo_id = ?', 'params' => [':id']],
+    ['sql' => 'DELETE FROM cabo_pontos  WHERE cabo_id = ?',                        'params' => [':id']],
+    ['sql' => 'DELETE FROM cabo_reservas WHERE cabo_id = ?',                       'params' => [':id']],
+    ['sql' => 'DELETE FROM fusoes WHERE cabo_entrada_id = ? OR cabo_saida_id = ?', 'params' => [':id', ':id']],
+    ['sql' => 'UPDATE rack_conexoes SET cabo_id = NULL, fibra_num = NULL WHERE cabo_id = ?', 'params' => [':id']],
 ]);
+
+$pageTitle = 'Cabos';
+$activePage = 'cabos';
+require_once __DIR__ . '/../../includes/header.php';
 
 $search = $_GET['q'] ?? '';
 $sql = "SELECT c.*, u.nome as criado_por,
