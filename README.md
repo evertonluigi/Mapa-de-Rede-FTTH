@@ -145,7 +145,43 @@ Importe o arquivo SQL no banco:
 mysql -u seu_usuario -p ftth_network < ftth_hostinger.sql
 ```
 
-### 5. Configurar o servidor web
+### 5. Criar o arquivo `.env`
+
+O arquivo `.env` **não está incluído no repositório** (ele fica no `.gitignore` para proteger suas credenciais). Você precisa criá-lo manualmente na raiz do projeto.
+
+Crie o arquivo `.env` com o seguinte conteúdo:
+
+```env
+DB_HOST=localhost
+DB_NAME=ftth_network
+DB_USER=seu_usuario_mysql
+DB_PASS=sua_senha_mysql
+
+GOOGLE_MAPS_KEY=
+JWT_SECRET=troque-por-uma-chave-forte-de-pelo-menos-32-caracteres
+```
+
+> O `config/config.php` lê automaticamente este arquivo na inicialização.
+
+### 6. Chave da API do Google Maps
+
+O mapa utiliza o **Google Maps** para os modos de visualização **Rua** e **Satélite**. Para que esses modos funcionem, é necessário uma chave de API do Google Maps Platform.
+
+**Como obter a chave:**
+1. Acesse [console.cloud.google.com](https://console.cloud.google.com)
+2. Crie um projeto ou selecione um existente
+3. Ative a API **Maps JavaScript API**
+4. Em **Credenciais**, clique em **Criar credencial → Chave de API**
+5. Restrinja a chave ao seu domínio (recomendado)
+6. Copie a chave e cole no `.env`:
+
+```env
+GOOGLE_MAPS_KEY=AIzaSy...sua-chave-aqui
+```
+
+> **Sem a chave:** os modos Rua e Satélite não carregarão os tiles (mapa cinza). O modo **Escuro** (CartoCDN/OpenStreetMap) funciona normalmente sem nenhuma chave.
+
+### 7. Configurar o servidor web
 
 **Apache** — certifique-se que `mod_rewrite` está ativo. O `.htaccess` já está incluído no projeto.
 
@@ -163,14 +199,6 @@ location /mapas {
     }
 }
 ```
-
-### 6. Instalação na Hostinger (Shared Hosting)
-
-1. Acesse o **File Manager** do hPanel
-2. Faça upload de todos os arquivos para `public_html/mapas/` (ou subpasta desejada)
-3. No **phpMyAdmin**, crie um banco de dados e importe `ftth_hostinger.sql`
-4. Crie `config/config.php` com os dados fornecidos pela Hostinger
-5. Acesse `https://seudominio.com.br/mapas` e faça login
 
 ---
 
@@ -200,6 +228,8 @@ mapas/
 │   ├── splitters/
 │   └── usuarios/
 ├── uploads/              # Fotos (criada automaticamente)
+├── .env.example          # Modelo do arquivo de configuração
+├── .env                  # Suas credenciais reais (NÃO versionar — já no .gitignore)
 ├── dashboard.php         # Mapa principal
 ├── index.php             # Redireciona para login/dashboard
 ├── login.php
